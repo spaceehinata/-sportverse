@@ -21,7 +21,7 @@ export default function WelcomeScreen() {
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.button, styles.signup]}
-      onPress={() => router.push('/signup')}>
+      onPress={() => router.push('/newPass')}>
         <Text style={styles.signupText}>Sign Up</Text>
       </TouchableOpacity>
 

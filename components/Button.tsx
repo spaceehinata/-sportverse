@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface ButtonProps {
   text: string;
@@ -8,7 +8,7 @@ interface ButtonProps {
   width?: string | number;
 }
 
-const CustomButton: React.FC<ButtonProps> = ({
+const Button: React.FC<ButtonProps> = ({
   text,
   onPress,
   backgroundColor = '#263238',
@@ -31,7 +31,7 @@ const CustomButton: React.FC<ButtonProps> = ({
   );
 };
 
-export default CustomButton;
+export default Button;
 
 const styles = StyleSheet.create({
   button: {
