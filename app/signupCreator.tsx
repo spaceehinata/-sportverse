@@ -1,16 +1,18 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+
 import Button from '../components/Button';
 import TermsCheckbox from '../components/TermsCheckbox';
-import UserAcc from '../components/userAcc';
-export default function SignUpScreen() {
+import Creator from '../components/creator';
+
+export default function SignUpCreaatorScreen() {
   const router = useRouter();
 
   const handlePress = () => {
@@ -19,15 +21,16 @@ export default function SignUpScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create{'\n'}your account</Text>
+      <Text style={styles.title}>Create content{'\n'}creator account</Text>
 
       <Text style={styles.description}>
         Experience the world at your fingertips with{'\n'} our travel mobile app!
       </Text>
-        <UserAcc />
 
+      <Creator />
       <TermsCheckbox />
 
+      {/* პირდაპირ Button-ზე onPress გადმოცემა */}
       <Button text="Sign Up" onPress={handlePress} />
 
       <View style={styles.socialRow}>

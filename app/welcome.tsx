@@ -15,13 +15,14 @@ export default function WelcomeScreen() {
         In this app you can find out sport universe
       </Text>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button}
+      onPress={() => router.push('/signin')}>
         
         <Text style={styles.signinText}>Sign In</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.button, styles.signup]}
-      onPress={() => router.push('/newPass')}>
+      onPress={() => router.push('/signup')}>
         <Text style={styles.signupText}>Sign Up</Text>
       </TouchableOpacity>
 
