@@ -1,6 +1,6 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Formik } from 'formik';
-import React, { useState } from 'react';
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Formik } from "formik";
+import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -9,56 +9,60 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import CountryPicker, { Country } from 'react-native-country-picker-modal';
-import * as Yup from 'yup';
+} from "react-native";
+import CountryPicker, { Country } from "react-native-country-picker-modal";
+import * as Yup from "yup";
 
-const warningIcon = require('../assets/images/war.png');
-const personIcon = require('../assets/images/usericon.png');
-const phoneIcon = require('../assets/images/phoneicon.png');
-const calendarIcon = require('../assets/images/calendaricon.png');
-const eyeIcon = require('../assets/images/eyeicon.png');
-const eyeOffIcon = require('../assets/images/eyeicon.png');
-const lockIcon = require('../assets/images/lockicon.png');
-const emailIcon = require('../assets/images/email.png');
-const linkIcon = require('../assets/images/link.png');
+import InputField from "@/components/InputField";
 
-import InputField from '@/components/InputField';
+const warningIcon = require("../assets/images/war.png");
+const personIcon = require("../assets/images/usericon.png");
+const phoneIcon = require("../assets/images/phoneicon.png");
+const calendarIcon = require("../assets/images/calendaricon.png");
+const eyeIcon = require("../assets/images/eyeicon.png");
+const eyeOffIcon = require("../assets/images/eyeicon.png");
+const lockIcon = require("../assets/images/lockicon.png");
+const emailIcon = require("../assets/images/email.png");
+const linkIcon = require("../assets/images/link.png");
 
 const SignUpSchema = Yup.object().shape({
   fullName: Yup.string()
-    .matches(/^[ა-ჰa-zA-Z\s]+$/, 'Full Name is not correct')
-    .required('Full Name is required'),
-  email: Yup.string().email('Email address is not valid').required('Email is required'),
+    .matches(/^[ა-ჰa-zA-Z\s]+$/, "Full Name is not correct")
+    .required("Full Name is required"),
+  email: Yup.string()
+    .email("Email address is not valid")
+    .required("Email is required"),
   phone: Yup.string()
-    .matches(/^[0-9]{6,}$/, 'Phone number is not valid')
-    .required('Phone is required'),
-  birthday: Yup.string().required('Birthday is required'),
-  password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
+    .matches(/^[0-9]{6,}$/, "Phone number is not valid")
+    .required("Phone is required"),
+  birthday: Yup.string().required("Birthday is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Required"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Passwords do not match')
-    .required('Required'),
-  instagram: Yup.string().url('Must be a valid URL').nullable(),
-  facebook: Yup.string().url('Must be a valid URL').nullable(),
-  countryOfResidence: Yup.string().required('Country is required'),
+    .oneOf([Yup.ref("password")], "Passwords do not match")
+    .required("Required"),
+  instagram: Yup.string().url("Must be a valid URL").nullable(),
+  facebook: Yup.string().url("Must be a valid URL").nullable(),
+  countryOfResidence: Yup.string().required("Country is required"),
 });
 
 export default function SignUp() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [countryCode, setCountryCode] = useState<Country['cca2']>('GE');
-  const [callingCode, setCallingCode] = useState('995');
+  const [countryCode, setCountryCode] = useState<Country["cca2"]>("GE");
+  const [callingCode, setCallingCode] = useState("995");
   const [showCountryPicker, setShowCountryPicker] = useState(false);
   const [useEmail, setUseEmail] = useState(false);
 
   const formatBirthdayInput = (text: string) => {
-    const cleaned = text.replace(/[^\d]/g, '');
+    const cleaned = text.replace(/[^\d]/g, "");
     let formatted = cleaned;
     if (cleaned.length > 2) {
-      formatted = cleaned.slice(0, 2) + '/';
+      formatted = cleaned.slice(0, 2) + "/";
       if (cleaned.length > 4) {
-        formatted += cleaned.slice(2, 4) + '/';
+        formatted += cleaned.slice(2, 4) + "/";
         formatted += cleaned.slice(4, 8);
       } else {
         formatted += cleaned.slice(2);
@@ -70,16 +74,16 @@ export default function SignUp() {
   return (
     <Formik
       initialValues={{
-        fullName: '',
-        email: '',
-        phone: '',
-        birthday: '',
-        password: '',
-        confirmPassword: '',
+        fullName: "",
+        email: "",
+        phone: "",
+        birthday: "",
+        password: "",
+        confirmPassword: "",
         useEmail: false,
-        instagram: '',
-        facebook: '',
-        countryOfResidence: '',
+        instagram: "",
+        facebook: "",
+        countryOfResidence: "",
       }}
       validationSchema={SignUpSchema}
       onSubmit={(values) => {
@@ -101,8 +105,7 @@ export default function SignUp() {
       }) => (
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
         >
           <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
@@ -111,8 +114,8 @@ export default function SignUp() {
                 placeholder="Clifton Simmons"
                 placeholderTextColor="#AAAAAA"
                 icon={personIcon}
-                onChangeText={handleChange('fullName')}
-                onBlur={handleBlur('fullName')}
+                onChangeText={handleChange("fullName")}
+                onBlur={handleBlur("fullName")}
                 value={values.fullName}
                 error={errors.fullName}
                 touched={touched.fullName}
@@ -126,10 +129,10 @@ export default function SignUp() {
                     placeholderTextColor="#AAAAAA"
                     icon={phoneIcon}
                     onChangeText={(text: string) => {
-                      const onlyNums = text.replace(/[^\d]/g, '');
-                      setFieldValue('phone', onlyNums);
+                      const onlyNums = text.replace(/[^\d]/g, "");
+                      setFieldValue("phone", onlyNums);
                     }}
-                    onBlur={handleBlur('phone')}
+                    onBlur={handleBlur("phone")}
                     value={values.phone}
                     error={errors.phone}
                     touched={touched.phone}
@@ -151,8 +154,8 @@ export default function SignUp() {
                     placeholder="example@email.com"
                     placeholderTextColor="#AAAAAA"
                     icon={emailIcon}
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
                     value={values.email}
                     error={errors.email}
                     touched={touched.email}
@@ -162,11 +165,11 @@ export default function SignUp() {
                 <Text
                   onPress={() => {
                     setUseEmail((prev) => !prev);
-                    setFieldValue('useEmail', !useEmail);
+                    setFieldValue("useEmail", !useEmail);
                   }}
                   style={styles.switchToggle}
                 >
-                  {useEmail ? 'Sign Up with Phone' : 'Sign Up with Email '}
+                  {useEmail ? "Sign Up with Phone" : "Sign Up with Email "}
                 </Text>
               </View>
 
@@ -182,8 +185,9 @@ export default function SignUp() {
                     setCountryCode(country.cca2);
                     setShowCountryPicker(false);
                     setFieldValue(
-                      'countryOfResidence',
-                      typeof country.name === 'object' && 'common' in country.name
+                      "countryOfResidence",
+                      typeof country.name === "object" &&
+                        "common" in country.name
                         ? country.name.common
                         : (country.name as string)
                     );
@@ -201,9 +205,9 @@ export default function SignUp() {
                 value={values.birthday}
                 onChangeText={(text: string) => {
                   const formatted = formatBirthdayInput(text);
-                  setFieldValue('birthday', formatted);
+                  setFieldValue("birthday", formatted);
                 }}
-                onBlur={handleBlur('birthday')}
+                onBlur={handleBlur("birthday")}
                 editable={true}
                 error={errors.birthday}
                 touched={touched.birthday}
@@ -214,13 +218,15 @@ export default function SignUp() {
               {showDatePicker && (
                 <DateTimePicker
                   mode="date"
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  textColor="#000000"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
                   value={new Date()}
                   onChange={(event, selectedDate) => {
                     setShowDatePicker(false);
                     if (selectedDate) {
-                      const formattedDate = selectedDate.toLocaleDateString('en-GB');
-                      setFieldValue('birthday', formattedDate);
+                      const formattedDate =
+                        selectedDate.toLocaleDateString("en-GB");
+                      setFieldValue("birthday", formattedDate);
                     }
                   }}
                 />
@@ -232,8 +238,8 @@ export default function SignUp() {
                 placeholderTextColor="#AAAAAA"
                 icon={showPassword ? eyeOffIcon : eyeIcon}
                 secureTextEntry={!showPassword}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
                 value={values.password}
                 error={errors.password}
                 touched={touched.password}
@@ -246,8 +252,8 @@ export default function SignUp() {
                 placeholderTextColor="#AAAAAA"
                 icon={showConfirmPassword ? eyeOffIcon : lockIcon}
                 secureTextEntry={!showConfirmPassword}
-                onChangeText={handleChange('confirmPassword')}
-                onBlur={handleBlur('confirmPassword')}
+                onChangeText={handleChange("confirmPassword")}
+                onBlur={handleBlur("confirmPassword")}
                 value={values.confirmPassword}
                 error={errors.confirmPassword}
                 touched={touched.confirmPassword}
@@ -259,8 +265,8 @@ export default function SignUp() {
                 placeholder="https://www.instagram.com/"
                 placeholderTextColor="#AAAAAA"
                 icon={linkIcon}
-                onChangeText={handleChange('instagram')}
-                onBlur={handleBlur('instagram')}
+                onChangeText={handleChange("instagram")}
+                onBlur={handleBlur("instagram")}
                 value={values.instagram}
                 error={errors.instagram}
                 touched={touched.instagram}
@@ -271,8 +277,8 @@ export default function SignUp() {
                 placeholder="https://www.facebook.com/"
                 placeholderTextColor="#AAAAAA"
                 icon={linkIcon}
-                onChangeText={handleChange('facebook')}
-                onBlur={handleBlur('facebook')}
+                onChangeText={handleChange("facebook")}
+                onBlur={handleBlur("facebook")}
                 value={values.facebook}
                 error={errors.facebook}
                 touched={touched.facebook}
@@ -303,7 +309,7 @@ export default function SignUp() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     flex: 1,
   },
   scrollContainer: {
@@ -314,15 +320,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   switchToggle: {
-    color: '#AAAAAA',
+    color: "#AAAAAA",
     fontSize: 14,
-    position: 'absolute',
+    position: "absolute",
     right: 0,
     top: 0,
   },
   countryCodeText: {
     fontSize: 16,
-    color: '#AAAAAA',
+    color: "#AAAAAA",
     paddingRight: 12,
   },
   countryCodeWrapper: {

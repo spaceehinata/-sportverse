@@ -1,276 +1,270 @@
-import { useRouter } from 'expo-router';
-import { Formik } from 'formik';
-import React, { useState } from 'react';
+import { useRouter } from "expo-router";
+import { Formik } from "formik";
+import React, { useState } from "react";
 import {
-    Image,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
-import * as Yup from 'yup';
-import Button from '../components/Button';
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import CountryPicker, { Country } from "react-native-country-picker-modal";
+import * as Yup from "yup";
+import Button from "../components/Button";
+import InputField from "../components/InputField";
+
+const phoneIcon = require("../assets/images/phoneicon.png");
+const emailIcon = require("../assets/images/email.png");
+const eyeIcon = require("../assets/images/eyeicon.png");
+const eyeOffIcon = require("../assets/images/eyeicon.png");
+const lockIcon = require("../assets/images/lockicon.png");
 
 export default function SignInScreen() {
   const router = useRouter();
   const [useEmail, setUseEmail] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [countryCode, setCountryCode] = useState<Country["cca2"]>("GE");
+  const [callingCode, setCallingCode] = useState("995");
+  const [showCountryPicker, setShowCountryPicker] = useState(false);
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string().when('useEmail', (useEmail, schema) =>
-    useEmail ? schema.email('Invalid email').required('Required') : schema.notRequired()
-  ),
-  phone: Yup.string().when('useEmail', (useEmail, schema) =>
-    !useEmail
-      ? schema
-          .matches(/^[0-9]{9}$/, 'Must be 9 digits')
-          .required('Required')
-      : schema.notRequired()
-  ),
-  password: Yup.string().required('Password is required'),
-});
-
+  const SignInSchema = Yup.object().shape({
+    email: Yup.string().when("useEmail", {
+      is: true,
+      then: (schema) => schema.email("Invalid email").required("Required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    phone: Yup.string().when("useEmail", {
+      is: false,
+      then: (schema) =>
+        schema
+          .matches(/^[0-9]{6,}$/, "Must be at least 6 digits")
+          .required("Required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    password: Yup.string().required("Password is required"),
+  });
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign in{'\n'}your account</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.container}>
+            <Image
+              source={require("../assets/images/bg.png")}
+              style={styles.bg}
+            />
+            <View style={styles.contentWrapper}>
+              <Text style={styles.title}>Sign in{"\n"}your account</Text>
+              <Text style={styles.description}>
+                Experience the world at your fingertips with our social mobile
+                app!
+              </Text>
 
-      <Text style={styles.description}>
-        Experience the world at your fingertips with{'\n'} our social mobile app!
-      </Text>
-
-      <Formik
-        initialValues={{ email: '', phone: '', password: '', useEmail }}
-        validationSchema={validationSchema}
-        onSubmit={(values) => {
-          console.log('Submitted values:', values);
-          router.push('/welcome'); 
-        }}
-      >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          setFieldValue,
-        }) => (
-          <>
-            {/* Email / Phone */}
-            <View style={styles.inputWrapper}>
-              <Text style={styles.label}>{useEmail ? 'Email' : 'Phone'}</Text>
-              <View style={styles.inputContainer}>
-                <Image
-                  source={
-                    useEmail
-                      ? require('../assets/images/email.png')
-                      : require('../assets/images/phoneicon.png')
-                  }
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder={useEmail ? 'example@email.com' : '555123456'}
-                  placeholderTextColor="#AAAAAA"
-                  keyboardType={useEmail ? 'email-address' : 'phone-pad'}
-                  onChangeText={handleChange(useEmail ? 'email' : 'phone')}
-                  onBlur={handleBlur(useEmail ? 'email' : 'phone')}
-                  value={useEmail ? values.email : values.phone}
-                />
-              </View>
-              {useEmail && touched.email && errors.email && (
-                <Text style={styles.errorText}>{errors.email}</Text>
-              )}
-              {!useEmail && touched.phone && errors.phone && (
-                <Text style={styles.errorText}>{errors.phone}</Text>
-              )}
-
-              <TouchableOpacity
-                onPress={() => {
-                  const nextUseEmail = !useEmail;
-                  setUseEmail(nextUseEmail);
-                  setFieldValue('useEmail', nextUseEmail);
+              <Formik
+                initialValues={{ email: "", phone: "", password: "", useEmail }}
+                validationSchema={SignInSchema}
+                onSubmit={(values) => {
+                  const fullPhone = `+${callingCode} ${values.phone}`;
+                  console.log("Submitted:", {
+                    ...values,
+                    phone: fullPhone,
+                    countryCode,
+                  });
+                  router.push("/homepage");
                 }}
               >
-                <Text style={styles.switchText}>
-                  {useEmail ? 'Login with Email' : 'Login with Phone'}
-                </Text>
-              </TouchableOpacity>
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  values,
+                  errors,
+                  touched,
+                  setFieldValue,
+                }) => (
+                  <>
+                    <View>
+                      {!useEmail ? (
+                        <InputField
+                          label="Phone"
+                          placeholder="555 555001"
+                          placeholderTextColor="#AAAAAA"
+                          icon={phoneIcon}
+                          onChangeText={(text: string) => {
+                            const onlyNums = text.replace(/[^\d]/g, "");
+                            setFieldValue("phone", onlyNums);
+                          }}
+                          onBlur={handleBlur("phone")}
+                          value={values.phone}
+                          error={errors.phone}
+                          touched={touched.phone}
+                          leftElement={
+                            <TouchableOpacity
+                              onPress={() => setShowCountryPicker(true)}
+                              style={styles.countryCodeWrapper}
+                            >
+                              <Text style={styles.countryCodeText}>
+                                {countryCode} +{callingCode}
+                              </Text>
+                            </TouchableOpacity>
+                          }
+                          keyboardType="phone-pad"
+                        />
+                      ) : (
+                        <InputField
+                          label="Email"
+                          placeholder="example@email.com"
+                          placeholderTextColor="#AAAAAA"
+                          icon={emailIcon}
+                          onChangeText={handleChange("email")}
+                          onBlur={handleBlur("email")}
+                          value={values.email}
+                          error={errors.email}
+                          touched={touched.email}
+                        />
+                      )}
+
+                      <Text
+                        onPress={() => {
+                          setUseEmail((prev) => !prev);
+                          setFieldValue("useEmail", !useEmail);
+                        }}
+                        style={styles.switchToggle}
+                      >
+                        {useEmail
+                          ? "Sign Up with Phone"
+                          : "Sign Up with Email "}
+                      </Text>
+                    </View>
+
+                    {showCountryPicker && (
+                      <CountryPicker
+                        countryCode={countryCode}
+                        withCallingCode
+                        withFilter
+                        withFlag
+                        withEmoji
+                        withModal
+                        onSelect={(country) => {
+                          setCountryCode(country.cca2);
+                          setCallingCode(country.callingCode[0]);
+                          setShowCountryPicker(false);
+                        }}
+                        onClose={() => setShowCountryPicker(false)}
+                        visible={showCountryPicker}
+                      />
+                    )}
+
+                    <InputField
+                      label="Password"
+                      placeholder="********"
+                      placeholderTextColor="#AAAAAA"
+                      icon={showPassword ? eyeOffIcon : eyeIcon}
+                      secureTextEntry={!showPassword}
+                      iconOnPress={() => setShowPassword((prev) => !prev)}
+                      value={values.password}
+                      onChangeText={handleChange("password")}
+                      onBlur={handleBlur("password")}
+                      touched={touched.password}
+                      error={errors.password}
+                    />
+
+                    <TouchableOpacity onPress={() => router.push("/forgot")}>
+                      <Text style={styles.forgotText}>Forgot Password?</Text>
+                    </TouchableOpacity>
+
+                    <Button text="Sign In" onPress={handleSubmit} />
+
+                    <Text style={styles.haveacc}>
+                      Do not have an account?{" "}
+                      <Text style={styles.haveaccHighlight}>Sign Up</Text>
+                    </Text>
+                  </>
+                )}
+              </Formik>
             </View>
-
-            {/* Password */}
-            <View style={styles.inputWrapper}>
-              <Text style={styles.label}>Password</Text>
-              <View style={styles.inputContainer}>
-                <Image
-                  source={require('../assets/images/eyeicon.png')}
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="********"
-                  placeholderTextColor="#AAAAAA"
-                  secureTextEntry={!showPassword}
-                  onChangeText={handleChange('password')}
-                  onBlur={handleBlur('password')}
-                  value={values.password}
-                />
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                  <Image
-                    source={require('../assets/images/eyeicon.png')}
-                    style={styles.eyeIcon}
-                  />
-                </TouchableOpacity>
-              </View>
-              {touched.password && errors.password && (
-                <Text style={styles.errorText}>{errors.password}</Text>
-              )}
-            </View>
-
-            <Button text="Sign In" onPress={handleSubmit} />
-          </>
-        )}
-      </Formik>
-
-      {/* Social */}
-      <View style={styles.socialRow}>
-        <Text style={styles.socialText}>Or sign in with</Text>
-        <View style={styles.iconsRow}>
-          <TouchableOpacity style={styles.iconWrapper}>
-            <Image
-              source={require('../assets/images/google.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconWrapper}>
-            <Image
-              source={require('../assets/images/facebook.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.iconWrapper}>
-            <Image
-              source={require('../assets/images/apple.png')}
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <Text style={styles.haveacc}>
-        Don't have an account?{' '}
-        <Text style={styles.haveaccHighlight}>Sign In</Text>
-      </Text>
-    </View>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
+  },
+  switchToggle: {
+    color: "#AAAAAA",
+    fontSize: 14,
+    position: "absolute",
+    right: 0,
+    top: 0,
+  },
+  bg: {
+    position: "absolute",
+    width: "100%",
+    height: 280,
+    top: 0,
+    left: 0,
+    resizeMode: "cover",
+  },
+  contentWrapper: {
+    marginTop: 260,
     paddingHorizontal: 20,
-    justifyContent: 'flex-start',
   },
   title: {
-    color: '#0A0B2E',
     fontSize: 30,
-    fontWeight: '400',
-    fontFamily: 'Noto Sans Georgian',
-    marginBottom: 38,
-    marginTop: 89,
+    color: "#0A0B2E",
+    fontWeight: "400",
+    fontFamily: "Noto Sans Georgian",
+    marginBottom: 5,
+    marginTop: 40,
   },
   description: {
-    color: '#AAAAAA',
     fontSize: 14,
-    marginBottom: 40,
-    fontFamily: 'Noto Sans Georgian',
-  },
-  inputWrapper: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    color: '#0A0B2E',
-    marginBottom: 6,
-    fontFamily: 'Noto Sans Georgian',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#D9D9D9',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    height: 48,
-    backgroundColor: '#F9F9F9',
-  },
-  inputIcon: {
-    width: 20,
-    height: 20,
-    resizeMode: 'contain',
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    color: '#0A0B2E',
-    fontSize: 14,
-    fontFamily: 'Noto Sans Georgian',
-  },
-  eyeIcon: {
-    width: 20,
-    height: 20,
-    tintColor: '#AAAAAA',
+    color: "#AAAAAA",
+    marginBottom: 17,
+    fontFamily: "Noto Sans Georgian",
   },
   switchText: {
-    marginTop: 6,
     fontSize: 13,
-    color: '#125BE4',
-    fontFamily: 'Noto Sans Georgian',
+    color: "#125BE4",
+    fontFamily: "Noto Sans Georgian",
   },
-  errorText: {
-    fontSize: 12,
-    color: '#FF4D4F',
-    marginTop: 4,
-    fontFamily: 'Noto Sans Georgian',
+  forgotText: {
+    fontSize: 13,
+    color: "#aaa",
+    marginVertical: 16,
+    fontFamily: "Noto Sans Georgian",
   },
   haveacc: {
-    color: '#AAAAAA',
     fontSize: 14,
-    fontWeight: '400',
-    fontFamily: 'Noto Sans Georgian',
-    textAlign: 'center',
-    marginTop: 33,
-    marginBottom: 26,
+    color: "#AAAAAA",
+    textAlign: "center",
+    marginTop: 25,
+    marginBottom: 30,
+    fontFamily: "Noto Sans Georgian",
   },
   haveaccHighlight: {
-    color: '#125BE4',
-    fontSize: 14,
-    fontWeight: '400',
-    fontFamily: 'Noto Sans Georgian',
+    color: "#125BE4",
+    fontFamily: "Noto Sans Georgian",
   },
-  socialRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 20,
+  countryCodeWrapper: {
+    paddingRight: 12,
   },
-  socialText: {
-    fontSize: 14,
-    color: '#AAAAAA',
-    fontFamily: 'Noto Sans Georgian',
-  },
-  iconsRow: {
-    flexDirection: 'row',
-  },
-  iconWrapper: {
-    marginHorizontal: 10,
-  },
-  icon: {
-    width: 45,
-    height: 38,
-    resizeMode: 'contain',
+  countryCodeText: {
+    fontSize: 16,
+    color: "#AAAAAA",
+    paddingRight: 12,
   },
 });
