@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router"; // ✅ დაამატე ეს
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   FlatList,
@@ -38,7 +38,7 @@ const SPORTS = [
 export default function FavoriteSportsScreen() {
   const [selected, setSelected] = useState<string[]>([]);
   const [search, setSearch] = useState("");
-  const router = useRouter(); // ✅ დაამატე ეს
+  const router = useRouter();
 
   const toggleSport = (sport: string) => {
     setSelected((prev) =>
@@ -48,7 +48,7 @@ export default function FavoriteSportsScreen() {
 
   const handleSubmit = () => {
     console.log("Selected sports:", selected);
-    router.push("/image"); // ✅ აქ უკვე იმუშავებს
+    router.push("./image"); 
   };
 
   const filteredSports = SPORTS.filter((s) =>

@@ -27,7 +27,7 @@ export default function WelcomeScreen() {
 
       <TouchableOpacity
         style={[styles.button, styles.signup]}
-        onPress={() => router.push("/signupCreator")}
+        onPress={() => router.push("/signup")}
       >
         <Text style={styles.signupText}>Sign Up</Text>
       </TouchableOpacity>
@@ -36,7 +36,11 @@ export default function WelcomeScreen() {
         Already have an account?{" "}
         <Text style={styles.haveaccHighlight}>Sign Up</Text>
       </Text>
+            <TouchableOpacity
+        onPress={() => router.push("/homepage")}
+      >
       <Text style={styles.footer}>REGISTER AS CONTENT CREATOR</Text>
+      </TouchableOpacity>
     </View>
   );
 }

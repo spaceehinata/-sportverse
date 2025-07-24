@@ -14,8 +14,8 @@ const TermsCheckbox = () => {
         {isChecked && <View style={styles.innerBox} />}
       </View>
         <Text style={styles.haveacc}>
-            Already have an account?{' '}
-            <Text style={styles.haveaccHighlight}>Sign Up</Text>
+            Accept{' '}
+            <Text style={styles.haveaccHighlight}>Terms and conditions</Text>
         </Text>
     </TouchableOpacity>
   );

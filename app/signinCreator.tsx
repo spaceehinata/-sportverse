@@ -153,7 +153,7 @@ export default function SignInScreen() {
                         withCallingCode
                         withFilter
                         withFlag
-                        withEmoji
+                        withEmoji={false}
                         withModal
                         onSelect={(country) => {
                           setCountryCode(country.cca2);

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
   Alert,
   Image,
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -64,16 +65,15 @@ const LastPageCamera = () => {
       <Text style={styles.subTitle}>Set Profile Image</Text>
 
       <View style={styles.imageWrapper}>
-        <View style={styles.imageBorderLeft} />
-        <View style={styles.imageBorderRight} />
-        <Image
-          source={
-            profileImage
-              ? { uri: profileImage }
-              : require("../assets/images/shape.png")
-          }
-          style={styles.image}
-        />
+        <ImageBackground
+          source={require("../assets/images/shape.png")}
+          style={styles.shapeBackground}
+          imageStyle={{ borderRadius: 20 }}
+        >
+          {profileImage && (
+            <Image source={{ uri: profileImage }} style={styles.innerImage} />
+          )}
+        </ImageBackground>
       </View>
 
       <TouchableOpacity style={styles.outlineButton} onPress={openCamera}>
@@ -123,10 +123,9 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontWeight: "700",
-    fontSize: 20,
-    lineHeight: 20,
+    fontSize: 25,
     color: "#263238",
-    marginBottom: 12,
+    marginBottom: 16,
     textAlign: "center",
   },
   headerDescription: {
@@ -138,44 +137,26 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     fontWeight: "700",
-    fontSize: 16,
-    marginBottom: 24,
-    color: "#000",
+    fontSize: 18,
+    marginBottom: 34,
+    color: "#606060",
   },
   imageWrapper: {
-    position: "relative",
     marginBottom: 48,
     justifyContent: "center",
     alignItems: "center",
   },
-  image: {
+  shapeBackground: {
+    width: 197,
+    height: 181,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  innerImage: {
     width: 181,
     height: 166,
-    borderRadius: 20,
-    backgroundColor: "#c0c0c0",
     resizeMode: "cover",
-  },
-  imageBorderLeft: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: 15,
-    height: 120,
-    borderLeftWidth: 3,
-    borderBottomWidth: 3,
-    borderColor: "#2946FF",
-    borderBottomLeftRadius: 20,
-  },
-  imageBorderRight: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    width: 15,
-    height: 120,
-    borderRightWidth: 3,
-    borderTopWidth: 3,
-    borderColor: "#666666",
-    borderTopRightRadius: 20,
+    borderRadius: 25,
   },
   outlineButton: {
     borderWidth: 1,
@@ -210,5 +191,6 @@ const styles = StyleSheet.create({
     color: "#BBBBBB",
     fontSize: 14,
     fontWeight: "500",
+    marginTop: 16,
   },
 });

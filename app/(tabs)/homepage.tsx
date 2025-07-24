@@ -48,20 +48,24 @@ export default function HomePage() {
             style={styles.headerBackground}
           />
 
-          <View style={styles.headerContent}>
-            <Image
-              source={require('../../assets/images/logo.png')}
-              style={styles.logo}
-            />
-            <View style={styles.avatarRow}>
-              {avatars.map((avatar, idx) => (
-                <View key={idx} style={styles.avatarItem}>
-                  <Image source={avatar.img} style={styles.avatarImage} />
-                  <Text style={styles.avatarName}>{avatar.name}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
+<View style={styles.headerContent}>
+  <Image
+    source={require('../../assets/images/logo.png')}
+    style={styles.logo}
+  />
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={styles.avatarRow}
+  >
+    {avatars.map((avatar, idx) => (
+      <View key={idx} style={styles.avatarItem}>
+        <Image source={avatar.img} style={styles.avatarImage} />
+        <Text style={styles.avatarName}>{avatar.name}</Text>
+      </View>
+    ))}
+  </ScrollView>
+</View>
         </View>
 
         {/* Posts */}
@@ -74,10 +78,14 @@ export default function HomePage() {
                     source={require('../../assets/images/stadium.png')}
                     style={styles.postAvatar}
                   />
-                  <View>
-                    <Text style={styles.postUser}>{post.user}</Text>
-                    <Text style={styles.postUsername}>@{post.username}</Text>
-                  </View>
+                <View style={styles.userNameWithTick}>
+                  <Text style={styles.postUser}>{post.user}</Text>
+                  <Image
+                    source={require('../../assets/images/tichka.png')}
+                    style={styles.tich}
+                  />
+                </View>
+
                 </View>
                 <Image
                   source={require('../../assets/images/more.png')}
@@ -216,6 +224,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  userNameWithTick: {
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+  tich:{
+    marginLeft:10,
+    width:8,
+    height:8,
   },
   postAvatar: {
     width: 21,

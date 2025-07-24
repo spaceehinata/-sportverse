@@ -180,7 +180,7 @@ export default function SignUp() {
                   withFlag={true}
                   withFilter
                   withModal
-                  withEmoji
+                  withEmoji={false}
                   onSelect={(country: Country) => {
                     setCountryCode(country.cca2);
                     setShowCountryPicker(false);
